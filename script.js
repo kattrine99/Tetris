@@ -37,7 +37,7 @@ const shapes = {
         shape:[[0, 1],
                [0, 1],
                [1, 1]],
-        color: 'cyan'
+        color: 'darkblue'
     },
 
     I: { 
