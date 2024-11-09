@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "typescript": "^5.6.3"
+  },
+  
+
+  "scripts": {
+    "compile": "tsc --project tsconfig.json",
+    "start": "node script.js",
+    "compile:start":"tsc --project tsconfig.json && node script.js"
+  }
+}
