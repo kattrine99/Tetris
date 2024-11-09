@@ -1,0 +1,10 @@
+.row {
+  display: flex;
+}
+
+.cell {
+  border: 1px solid #a1a1a1;
+  width: 25px;
+  height: 25px;
+}
+/*# sourceMappingURL=index.3a01df49.css.map */
