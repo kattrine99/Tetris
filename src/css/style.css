@@ -15,7 +15,7 @@ body{
 .cell {
   width: 25px;
   height: 25px;
-  border: 0.5px solid #2b1975;
+  border: 1px solid #2b1975;
 }
 h1{
   text-align: center;

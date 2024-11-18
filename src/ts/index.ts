@@ -1,8 +1,8 @@
 // Импортируем интерфейсы и фигуры для игры
 import { IShape, IShapes } from './interfaces';
 import { shapes } from './shapes';
-let score = 0; // Переменная для хранения счета
 
+let score = 0;
 // === Объявление функций ===
 
 // Функция для отрисовки игрового поля
@@ -28,19 +28,8 @@ function drawTetrisPlayground(x: number, y: number, target: HTMLDivElement) {
   }
 }
 
-// Функция для обновления счета
-function updateScore(points: number) {
-  score += points;
-
-  // Обновляем отображение на экране
-  const scoreElement = document.querySelector('.tetris-score') as HTMLDivElement;
-  if (scoreElement) {
-    scoreElement.textContent = `Score: ${score}`;
-  }
-}
-
 // Функция для отображения зафиксированных блоков на игровом поле
-function renderFixedBlocks(playground: number[][], tetrisPlaygroundTarget: HTMLDivElement | null) {
+function renderFixedBlocks() {
   for (let row = 0; row < playground.length; row++) {
     for (let col = 0; col < playground[row].length; col++) {
       const cell = tetrisPlaygroundTarget?.children[row]?.children[
@@ -59,12 +48,7 @@ function renderFixedBlocks(playground: number[][], tetrisPlaygroundTarget: HTMLD
 }
 
 // Функция для отображения движущейся фигуры на игровом поле
-function renderShape(
-  currentShape: { shape: number[][]; color: string },
-  currentX: number,
-  currentY: number,
-  tetrisPlaygroundTarget: HTMLDivElement | null
-) {
+function renderShape() {
   const rowsToColor = currentShape.shape.length;
   const cellsToColor = currentShape.shape[0].length;
 
@@ -89,13 +73,7 @@ function renderShape(
 }
 
 // Функция для удаления предыдущего состояния движущейся фигуры
-function removePreviousShape(
-  currentShape: { shape: number[][]; color: string },
-  currentX: number,
-  currentY: number,
-  playground: number[][],
-  tetrisPlaygroundTarget: HTMLDivElement | null
-) {
+function removePreviousShape() {
   const rowsToClear = currentShape.shape.length;
   const cellsToClear = currentShape.shape[0].length;
 
@@ -105,13 +83,16 @@ function removePreviousShape(
         const x = currentX + cellIndex;
         const y = currentY + rowIndex;
 
-        // Очищаем только если здесь нет зафиксированного блока
-        if (!playground[y][x]) {
-          const cell = tetrisPlaygroundTarget?.children[y]?.children[
-            x
-          ] as HTMLDivElement;
-          if (cell) {
-            cell.style.backgroundColor = '';
+        // Проверяем, не выходит ли за границы
+        if (x >= 0 && x < 10 && y >= 0 && y < 20) {
+          // Очищаем только если здесь нет зафиксированного блока
+          if (!playground[y][x]) {
+            const cell = tetrisPlaygroundTarget?.children[y]?.children[
+              x
+            ] as HTMLDivElement;
+            if (cell) {
+              cell.style.backgroundColor = '';
+            }
           }
         }
       }
@@ -136,11 +117,11 @@ function rotateShape(shape: number[][]): number[][] {
 }
 
 // Функция для перемещения фигуры влево и вправо
-function moveShape(direction: number, currentX: number, currentY: number, currentShape: { shape: number[][]; color: string }, playground: number[][], tetrisPlaygroundTarget: HTMLDivElement | null) {
-  if (!isCollision(currentShape.shape, currentX + direction, currentY, playground)) {
-    removePreviousShape(currentShape, currentX, currentY, playground, tetrisPlaygroundTarget);
+function moveShape(direction: number) {
+  if (!isCollision(currentShape.shape, currentX + direction, currentY)) {
+    removePreviousShape();
     currentX += direction;
-    renderShape(currentShape, currentX, currentY, tetrisPlaygroundTarget);
+    renderShape();
   }
 }
 
@@ -154,7 +135,7 @@ function createPlayground() {
 }
 
 // Функция для генерации новой фигуры
-function generateNewShape(shapeKeys: string[], shapes: IShapes, currentShape: { shape: number[][]; color: string }, currentX: number, currentY: number) {
+function generateNewShape() {
   const shapeKeyIndex = Math.floor(Math.random() * shapeKeys.length);
   const shapeKey = shapeKeys[shapeKeyIndex] as keyof IShapes;
   currentShape.shape = shapes[shapeKey].shape;
@@ -164,7 +145,7 @@ function generateNewShape(shapeKeys: string[], shapes: IShapes, currentShape: { 
 }
 
 // Проверка столкновения фигуры с границами или другими фигурами
-function isCollision(shape: number[][], x: number, y: number, playground: number[][]): boolean {
+function isCollision(shape: number[][], x: number, y: number): boolean {
   for (let row = 0; row < shape.length; row++) {
     for (let col = 0; col < shape[row].length; col++) {
       if (shape[row][col]) {
@@ -187,7 +168,7 @@ function isCollision(shape: number[][], x: number, y: number, playground: number
 }
 
 // Фиксация фигуры на игровом поле
-function fixShape(currentShape: { shape: number[][]; color: string }, currentX: number, currentY: number, playground: number[][]) {
+function fixShape() {
   for (let row = 0; row < currentShape.shape.length; row++) {
     for (let col = 0; col < currentShape.shape[row].length; col++) {
       if (currentShape.shape[row][col]) {
@@ -197,20 +178,34 @@ function fixShape(currentShape: { shape: number[][]; color: string }, currentX: 
   }
 }
 
-// Функция для удаления заполненных линий
-function removeFullLines(playground: number[][]) {
-  let linesCleared = 0; // Счетчик удаленных линий
+// Функция для обновления счета
+function updateScore(points: number) {
+  score += points;
 
+  // Обновляем отображение на экране
+  const scoreElement = document.createElement('div');
+  scoreElement.className = 'tetris-score';
+  scoreElement.textContent = `Score: ${score}`;
+  document.body.appendChild(scoreElement);
+}
+// Функция для удаления заполненных линий
+function removeFullLines() {
+
+  let rowsToAdd = 0
   for (let row = playground.length - 1; row >= 0; row--) {
     if (playground[row].every((cell) => cell === 1)) {
       playground.splice(row, 1);
-      playground.unshift(new Array(10).fill(0));
-      linesCleared++; // Увеличиваем счетчик
-      updateScore(linesCleared * 100);
-      }
+      rowsToAdd++
+      updateScore(rowsToAdd * 100);
     }
   }
 
+  for(let i = 0; i < rowsToAdd; i++) {
+    playground.unshift(new Array(10).fill(0));
+  }
+
+  renderFixedBlocks();
+}
 
 // === Начало выполнения программы ===
 
@@ -227,6 +222,8 @@ if (tetrisPlaygroundTarget) {
 const shapeKeys = Object.keys(shapes);
 
 // Инициализируем текущую фигуру
+// TODO: Сделать динамичным
+// Инициализируем текущую фигуру
 let currentShape : IShape = {
   shape: [],
   color: '',
@@ -234,55 +231,67 @@ let currentShape : IShape = {
 
 let currentX = 3;
 let currentY = 0;
-
-generateNewShape(shapeKeys, shapes, currentShape, currentX, currentY);
-console.log(currentShape);
-
-// Инициализируем игровое поле
+let speed = 1000; // Начальная скорость
+let isPaused = false;
+generateNewShape()
 const playground = createPlayground();
 
-// Рендерим фигуру на поле
-renderShape(currentShape, currentX, currentY, tetrisPlaygroundTarget);
+// Отображаем начальную фигуру
+renderShape();
 
-// Основной цикл игры
-setInterval(() => {
-  if (!isCollision(currentShape.shape, currentX, currentY + 1, playground)) {
-    // Если нет столкновения, двигаем фигуру вниз
-    removePreviousShape(currentShape, currentX, currentY, playground, tetrisPlaygroundTarget);
-    currentY++;
-    renderShape(currentShape, currentX, currentY, tetrisPlaygroundTarget);
-  } else {
-    // Фиксируем фигуру и генерируем новую
-    fixShape(currentShape, currentX, currentY, playground);
-    removeFullLines(playground);
+// Основной игровой цикл
+function gameLoop() {
+  setTimeout(() => {
+    if (!isPaused) {
+      // проверка на столкновение, если столкновения нет, то спускаем фигуру
+      if (!isCollision(currentShape.shape, currentX, currentY + 1)) {
+        // удаляем предыдущую движущуюся фигуру
+        removePreviousShape();
+        // спускаем координату строки на 1 единицу вниз
+        currentY++;
+        // и снова рисуем фигуру, только на 1 строчку ниже
+        renderShape();
+      } else {
+        fixShape();
+        removeFullLines();
+        generateNewShape();
 
-    // Генерируем новую фигуру
-    generateNewShape(shapeKeys, shapes, currentShape, currentX, currentY);
-    currentX = 3;
-    currentY = 0;
+        if (isCollision(currentShape.shape, currentX, currentY)) {
+          alert('Игра окончена');
+          return;
+        }
 
-    renderShape(currentShape, currentX, currentY, tetrisPlaygroundTarget);
+        renderShape();
+      }
+    }
+    gameLoop();
+  }, speed);
+}
+
+// Запускаем игровой цикл
+gameLoop();
+
+// Обработчик клавиш для управления фигурой
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') {
+    const newShape = rotateShape(currentShape.shape);
+    if (!isCollision(newShape, currentX, currentY)) {
+      removePreviousShape();
+      currentShape.shape = newShape;
+      renderShape();
+    }
+  } else if (e.code === 'ArrowLeft') {
+    moveShape(-1);
+  } else if (e.code === 'ArrowRight') {
+    moveShape(1);
+  } else if (e.code === 'ArrowDown') {
+    speed = 100; // Ускоряем падение фигуры
   }
-}, 500); // Интервал обновления
+});
 
-// Управление через клавиши
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'ArrowLeft') {
-    moveShape(-1, currentX, currentY, currentShape, playground, tetrisPlaygroundTarget);
-  } else if (event.key === 'ArrowRight') {
-    moveShape(1, currentX, currentY, currentShape, playground, tetrisPlaygroundTarget);
-  } else if (event.key === 'ArrowDown') {
-    if (!isCollision(currentShape.shape, currentX, currentY + 1, playground)) {
-      removePreviousShape(currentShape, currentX, currentY, playground, tetrisPlaygroundTarget);
-      currentY++;
-      renderShape(currentShape, currentX, currentY, tetrisPlaygroundTarget);
-    }
-  } else if (event.key === 'ArrowUp') {
-    const rotatedShape = rotateShape(currentShape.shape);
-    if (!isCollision(rotatedShape, currentX, currentY, playground)) {
-      removePreviousShape(currentShape, currentX, currentY, playground, tetrisPlaygroundTarget);
-      currentShape.shape = rotatedShape;
-      renderShape(currentShape, currentX, currentY, tetrisPlaygroundTarget);
-    }
+// Обработчик отпускания клавиш
+document.addEventListener('keyup', (e) => {
+  if (e.code === 'ArrowDown') {
+    speed = 1000; // Возвращаем стандартную скорость
   }
 });
