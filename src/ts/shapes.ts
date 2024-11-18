@@ -22,7 +22,7 @@ export const shapes: IShapes = {
       [1, 1, 1],
       [0, 1, 0],
     ],
-    color: 'purple',
+    color: '#af5aff',
   },
 
   O: {

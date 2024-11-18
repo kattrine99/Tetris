@@ -1,8 +1,10 @@
 
 body{
-  background-image: url('../images/tetris_background.jpg');
+  background-image: url('../images/Register\ -\ Login.gif');
   background-size:cover;
   background-repeat:no-repeat;
+  background-position: center;
+  background-blend-mode: screen;
   justify-content: center;
   justify-items: center;
 }
@@ -13,17 +15,17 @@ body{
 .cell {
   width: 25px;
   height: 25px;
-  border: 1px solid #ffffff;
+  border: 0.5px solid #2b1975;
 }
 h1{
   text-align: center;
   font-family: 'Chava';
   font-size: 60px;
-  color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
   text-shadow: 1px 5px 10px rgb(136, 0, 255);
 }
-.tetris-playground{
-
+.tetris-container{
+  background-color: rgba(14, 43, 117, 0.512);
 }
 
 
