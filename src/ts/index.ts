@@ -1,5 +1,5 @@
 // Импортируем интерфейсы и фигуры для игры
-import { IShapes } from './interfaces';
+import { IShape, IShapes } from './interfaces';
 import { shapes } from './shapes';
 let score = 0; // Переменная для хранения счета
 
@@ -206,15 +206,11 @@ function removeFullLines(playground: number[][]) {
       playground.splice(row, 1);
       playground.unshift(new Array(10).fill(0));
       linesCleared++; // Увеличиваем счетчик
+      updateScore(linesCleared * 100);
+      }
     }
   }
 
-  // Начисляем очки за удаленные линии
-  if (linesCleared > 0) {
-    updateScore(linesCleared * 100);
-    console.log('Current score:', score);
-  }
-}
 
 // === Начало выполнения программы ===
 
@@ -231,13 +227,16 @@ if (tetrisPlaygroundTarget) {
 const shapeKeys = Object.keys(shapes);
 
 // Инициализируем текущую фигуру
-let currentShape = {
-  shape: shapes['T'].shape,
-  color: shapes['T'].color,
+let currentShape : IShape = {
+  shape: [],
+  color: '',
 };
 
 let currentX = 3;
 let currentY = 0;
+
+generateNewShape(shapeKeys, shapes, currentShape, currentX, currentY);
+console.log(currentShape);
 
 // Инициализируем игровое поле
 const playground = createPlayground();

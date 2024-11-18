@@ -3,6 +3,10 @@ const path = require('path');
 module.exports = {
   mode: 'development',
   entry: './src/ts/index.ts',
+  devServer: {
+    static: './dist',   // Папка с выходными файлами
+    hot: true,          // Включить горячую перезагрузку
+  },
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'src', 'js'), // путь для сохранения бандла

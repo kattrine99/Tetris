@@ -4,10 +4,12 @@
     "ts-loader": "^9.5.1",
     "typescript": "^5.6.3",
     "webpack": "^5.96.1",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
   },
   "scripts": {
     "build": "parcel build index.html --dist-dir dist",
-    "compile": "npx webpack --config webpack.config.js"
+    "compile": "npx webpack --config webpack.config.js",
+    "start": "webpack serve --open"
   }
 }
