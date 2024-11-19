@@ -8,9 +8,13 @@
     <link rel="stylesheet" href="./src/css/style.css" />
   </head>
   <body>
-    <h1>TETRIS</h1>
+    <h1><span style="color: red;">T</span><span style="color: orange;">E</span><span style="color: yellow;">T</span><span style="color: green;">R</span><span style="color: cyan;">I</span><span style="color: purple;">S</span></h1>
+
     <div class="tetris-container">
       <div class="tetris-playground"></div>
+    </div>
+    <div id="pauseOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); color:white; font-size:2em; text-align:center; line-height:100vh;">
+      Игра на паузе. Нажмите Enter для продолжения.
     </div>
     <script src="./src/js/index.js"></script>
   </body>

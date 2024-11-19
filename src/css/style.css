@@ -6,7 +6,9 @@ body{
   background-position: center;
   background-blend-mode: screen;
   justify-content: center;
-  justify-items: center;
+  display: flex;
+  gap: 30px;
+  
 }
 .row {
   display: flex;
@@ -17,14 +19,16 @@ body{
   height: 25px;
   border: 1px solid #2b1975;
 }
-h1{
+h1, .tetris-score{
   text-align: center;
   font-family: 'Chava';
   font-size: 60px;
-  color: rgb(255, 255, 255);
-  text-shadow: 1px 5px 10px rgb(136, 0, 255);
+  text-shadow: 1px 5px 10px rgb(0, 0, 0);
 }
 .tetris-container{
+  display: flex;
+  justify-content: center;
+  gap: 20px;
   background-color: rgba(14, 43, 117, 0.512);
 }
 

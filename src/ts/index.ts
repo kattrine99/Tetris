@@ -179,14 +179,18 @@ function fixShape() {
 }
 
 // Функция для обновления счета
+// Функция для обновления счета
 function updateScore(points: number) {
   score += points;
-
-  // Обновляем отображение на экране
-  const scoreElement = document.createElement('div');
-  scoreElement.className = 'tetris-score';
-  scoreElement.textContent = `Score: ${score}`;
-  document.body.appendChild(scoreElement);
+  const scoreElement = document.querySelector('.tetris-score');
+  if (scoreElement) {
+    scoreElement.textContent = `Score: ${score}`;
+  } else {
+    const newScoreElement = document.createElement('div');
+    newScoreElement.className = 'tetris-score';
+    newScoreElement.textContent = `Score: ${score}`;
+    document.body.appendChild(newScoreElement);
+  }
 }
 // Функция для удаления заполненных линий
 function removeFullLines() {
@@ -222,8 +226,6 @@ if (tetrisPlaygroundTarget) {
 const shapeKeys = Object.keys(shapes);
 
 // Инициализируем текущую фигуру
-// TODO: Сделать динамичным
-// Инициализируем текущую фигуру
 let currentShape : IShape = {
   shape: [],
   color: '',
@@ -258,18 +260,40 @@ function gameLoop() {
 
         if (isCollision(currentShape.shape, currentX, currentY)) {
           alert('Игра окончена');
+          clearInterval(gameInterval);
           return;
         }
-
         renderShape();
       }
     }
     gameLoop();
   }, speed);
+
 }
+let gameInterval = setInterval(gameLoop, speed);
 
 // Запускаем игровой цикл
 gameLoop();
+function pauseGame() {
+  clearInterval(gameInterval); // Останавливаем таймер падения фигур
+  displayPauseMessage(true); // Отображаем сообщение о паузе (опционально)
+}
+
+// Функция для возобновления игры
+function resumeGame() {
+  if (!gameInterval) {
+    gameInterval = setInterval(gameLoop, speed);
+} 
+ displayPauseMessage(false); // Убираем сообщение о паузе (опционально)
+}
+
+// Функция для отображения/скрытия сообщения о паузе (опционально)
+function displayPauseMessage(show: boolean) {
+  const pauseOverlay = document.getElementById('pauseOverlay');
+  if (pauseOverlay) {
+    pauseOverlay.style.display = show ? 'block' : 'none';
+  }
+}
 
 // Обработчик клавиш для управления фигурой
 document.addEventListener('keydown', (e) => {
@@ -285,7 +309,18 @@ document.addEventListener('keydown', (e) => {
   } else if (e.code === 'ArrowRight') {
     moveShape(1);
   } else if (e.code === 'ArrowDown') {
+    speed = 100; 
     speed = 100; // Ускоряем падение фигуры
+    clearInterval(gameInterval); // Останавливаем старый интервал
+    gameInterval = setInterval(gameLoop, speed); // Ускоряем падение фигуры
+  } else if (e.code === 'Enter') {
+    isPaused = !isPaused;
+
+    if (isPaused) {
+      pauseGame(); // Останавливаем игру
+    } else {
+      resumeGame(); // Возобновляем игру
+    }
   }
 });
 
