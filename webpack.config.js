@@ -2,24 +2,23 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: './src/ts/index.ts',
-  devServer: {
-    static: './dist',   // Папка с выходными файлами
-    hot: true,          // Включить горячую перезагрузку
+  entry: {
+    index: './src/ts/index.ts',
+    gameFunctions: './src/ts/gameFunctions.ts',
   },
   output: {
-    filename: 'index.js',
-    path: path.resolve(__dirname, 'src', 'js'), // путь для сохранения бандла
+    filename: '[name].js',  // Это создаст index.js и gameFunctions.js
+    path: path.resolve(__dirname, 'src', 'js'),
   },
   resolve: {
-    extensions: ['.ts', '.js'], // поддержка .ts и .js файлов
+    extensions: ['.ts', '.js'],
   },
   module: {
     rules: [
       {
-        test: /\.ts$/, // все .ts файлы
+        test: /\.ts$/, 
         use: 'ts-loader',
-        exclude: /node_modules/, // исключаем node_modules
+        exclude: /node_modules/,
       },
     ],
   },
