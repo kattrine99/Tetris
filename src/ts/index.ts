@@ -1,13 +1,9 @@
-import { IShapes } from './interfaces';
-import { shapes } from './shapes';
 import {
   drawTetrisPlayground,
-  renderFixedBlocks,
   renderShape,
   removePreviousShape,
   rotateShape,
   moveShape,
-  createPlayground,
   generateNewShape,
   isCollision,
   fixShape,
@@ -74,9 +70,7 @@ document.addEventListener('keyup', (e) => {
 });
 
 const moveLeftButton = document.getElementById('moveLeft') as HTMLButtonElement;
-//const movePauseButton = document.getElementById('enter') as HTMLButtonElement;
 const moveRightButton = document.getElementById('moveRight') as HTMLButtonElement;
 
 moveLeftButton.addEventListener('click', () => moveShape(-1));
-//movePauseButton.addEventListener('click', ()=>);
 moveRightButton.addEventListener('click', () => moveShape(1)); 

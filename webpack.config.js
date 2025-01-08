@@ -4,10 +4,9 @@ module.exports = {
   mode: 'development',
   entry: {
     index: './src/ts/index.ts',
-    gameFunctions: './src/ts/gameFunctions.ts',
   },
   output: {
-    filename: '[name].js',  // Это создаст index.js и gameFunctions.js
+    filename: '[name].js',
     path: path.resolve(__dirname, 'src', 'js'),
   },
   resolve: {
